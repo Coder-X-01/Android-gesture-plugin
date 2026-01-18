@@ -1,0 +1,66 @@
+
+---
+
+### 第一步：准备你自己的“三段式”链接
+
+你要在 Reddit 发帖，必须先在 Google Play Console 后台把这三个链接准备好：
+
+1. **加入组 (Google Group)**：
+* 去 [Google Groups](https://groups.google.com/) 创建一个公开群组（例如：`my-gesture-tool-test@googlegroups.com`）。
+* **作用**：任何人只要点击“加入”，他的 Gmail 就会自动进入你的白名单。
+
+
+2. **接受邀请 (Web Link)**：
+* 格式通常是：`https://play.google.com/apps/testing/你的包名`
+* **作用**：用户点开后，会看到一个大按钮“Become a Tester”，点击后才算正式激活权限。
+
+
+3. **下载 App (Store Link)**：
+* 格式：`https://play.google.com/store/apps/details?id=你的包名`
+* **作用**：最后一步，跳转到商店进行下载。
+
+
+
+---
+
+### 第二步：去 Reddit 发帖（模版）
+
+你可以直接复制下面这段我为你写好的英文模版。在 Reddit 的 `r/AndroidClosedTesting` 点击 **"Create Post"**：
+
+**Title:** [12 vs 12] Need testers for my custom Gesture Plugin (Paid App) - Will test back immediately!
+
+**Content:**
+
+> Hi everyone,
+> I’m developing a custom gesture tool ($1.99) and need 12-20 testers to stay for 14 days. Since it's a paid app, **I've enabled License Testing for the Google Group**, so it will be **FREE** for you.
+> **Please follow these steps:**
+> 1. **Join Google Group:** [这里粘贴你的 Google Group 链接]
+> 2. **Accept Invitation (Web):** [这里粘贴你的 Web 加入链接]
+> 3. **Download on Play Store:** [这里粘贴你的 Store 下载链接]
+> 
+> 
+> **Note:** If it still shows a price, please wait a few minutes after joining the group or refresh the Store page.
+> **I will test your app back!** Please leave your links and a screenshot of my app in the comments. I will keep your app installed for at least 14 days.
+> Let's help each other out!
+
+---
+
+### 第三步：关键的“付费变免费”配置（必做）
+
+因为你的 App 是 1.99 美元，**如果你不操作这一步，Reddit 的人点开链接还是要付钱的**，没人会帮你测。
+
+1. 登录 **Play Console**。
+2. 找到 **Settings (设置)** -> **License Testing (许可测试)**。
+3. 在列表中找到刚才那个 Google Group 的邮件地址，勾选它。
+4. 确保 **License response** 选的是 `LICENSED`。
+5. **保存修改。** (生效可能需要几个小时，建议你自己先用小号试一下)。
+
+---
+
+### 💡 避坑小贴士
+
+* **关于截图**：当有人回复你“Installed!”并附带截图时，你一定要履行承诺去下他的 App，并回复他一张你安装好的截图。这是维护社区信用的唯一方式。
+* **关于时差**：Reddit 上欧美用户多，你深夜发帖可能回复最快。
+* **关于创意**：再次提醒，给他们的 AAB 包可以是“UI 展示版”，不一定要包含你最核心的清理逻辑或所有复杂手势，只要是个能运行的完整 App 即可。
+
+**你想让我现在帮你把那个“加入群组后价格还没变”的常见问题排查代码写出来吗？有时候在 App 内部检查一下授权状态会更稳妥。**
