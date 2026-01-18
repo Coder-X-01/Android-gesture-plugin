@@ -23,4 +23,20 @@ object Prefs {
     fun setAppPackage(ctx: Context, gesture: GestureType, pkg: String?) {
         sp(ctx).edit().putString("app_${gesture.name}", pkg).apply()
     }
+
+    fun getUseMediaProjection(ctx: Context): Boolean {
+        return sp(ctx).getBoolean("use_media_projection", false)
+    }
+
+    fun setUseMediaProjection(ctx: Context, use: Boolean) {
+        sp(ctx).edit().putBoolean("use_media_projection", use).apply()
+    }
+
+    fun getShowAnimation(ctx: Context): Boolean {
+        return sp(ctx).getBoolean("show_animation", true)
+    }
+
+    fun setShowAnimation(ctx: Context, show: Boolean) {
+        sp(ctx).edit().putBoolean("show_animation", show).apply()
+    }
 }

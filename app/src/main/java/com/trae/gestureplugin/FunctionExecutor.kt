@@ -29,9 +29,22 @@ object FunctionExecutor {
     }
 
     private fun screenshot(ctx: Context) {
-        val intent = Intent(ctx, CaptureActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        ctx.startActivity(intent)
+        if (Prefs.getUseMediaProjection(ctx)) {
+            // 使用旧版 MediaProjection (会有弹窗)
+            val intent = Intent(ctx, CaptureActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            ctx.startActivity(intent)
+        } else {
+            // 使用新版 AccessibilityService (无弹窗，Android 9.0+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val result = GestureAccessibilityService.instance?.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
+                if (result != true) {
+                    android.widget.Toast.makeText(ctx, "截屏失败，请确保辅助功能已开启", android.widget.Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                android.widget.Toast.makeText(ctx, "当前系统版本不支持无弹窗截屏 (需 Android 9.0+)，请在设置中开启“启用截图确认弹窗”", android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
     private fun launchApp(ctx: Context, pkg: String?) {

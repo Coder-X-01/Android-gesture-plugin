@@ -35,6 +35,9 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -57,6 +60,9 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -79,6 +85,9 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -101,6 +110,9 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -123,6 +135,9 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -145,8 +160,25 @@
                 android:text="选择应用"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="120dp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:visibility="gone" />
         </LinearLayout>
+
+        <Switch
+            android:id="@+id/switch_screenshot_confirm"
+            android:text="启用截图确认弹窗 (MediaProjection)"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Switch
+            android:id="@+id/switch_animation"
+            android:text="启用手势视觉动画"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
 
         <LinearLayout
             android:orientation="horizontal"

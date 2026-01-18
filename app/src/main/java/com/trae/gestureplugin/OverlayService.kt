@@ -13,51 +13,102 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.util.Log
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+
 class OverlayService : Service() {
     private lateinit var wm: WindowManager
     private var leftView: GestureView? = null
     private var rightView: GestureView? = null
+    
+    private val windowStateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val pkg = intent?.getStringExtra("package_name")
+            Log.d("OverlayService", "Window state changed: $pkg")
+            if (pkg == packageName) {
+                Log.d("OverlayService", "Entering self, disabling gestures")
+                setOverlayVisibility(false)
+            } else {
+                Log.d("OverlayService", "Entering other app, enabling gestures")
+                setOverlayVisibility(true)
+            }
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
         Log.d("OverlayService", "onCreate")
-        createChannel()
-        startForeground(1, buildNotification())
-        wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        addOverlay()
+        try {
+            createChannel()
+            startForeground(1, buildNotification())
+            wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            addOverlay()
+            
+            // Register receiver
+            val filter = IntentFilter("com.trae.gestureplugin.ACTION_WINDOW_CHANGED")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(windowStateReceiver, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(windowStateReceiver, filter)
+            }
+            
+            // Check initial state
+            val currentPkg = GestureAccessibilityService.currentPackage
+            if (currentPkg == packageName) {
+                setOverlayVisibility(false)
+            }
+        } catch (e: Exception) {
+            Log.e("OverlayService", "Error in onCreate", e)
+            stopSelf()
+        }
     }
 
     override fun onDestroy() {
+        try {
+            unregisterReceiver(windowStateReceiver)
+        } catch (e: Exception) {
+            // Ignore if not registered
+        }
         removeOverlay()
         super.onDestroy()
+    }
+    
+    private fun setOverlayVisibility(visible: Boolean) {
+        val visibility = if (visible) android.view.View.VISIBLE else android.view.View.GONE
+        leftView?.visibility = visibility
+        rightView?.visibility = visibility
     }
 
     private fun addOverlay() {
         Log.d("OverlayService", "addOverlay")
-        val lpLeft = WindowManager.LayoutParams(
-            (resources.displayMetrics.widthPixels * 0.15f).toInt(),
-            WindowManager.LayoutParams.MATCH_PARENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-        lpLeft.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+        try {
+            val lpLeft = WindowManager.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.15f).toInt(),
+                WindowManager.LayoutParams.MATCH_PARENT,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+            lpLeft.gravity = Gravity.START or Gravity.CENTER_VERTICAL
 
-        val lpRight = WindowManager.LayoutParams(
-            (resources.displayMetrics.widthPixels * 0.15f).toInt(),
-            WindowManager.LayoutParams.MATCH_PARENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
-        lpRight.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+            val lpRight = WindowManager.LayoutParams(
+                (resources.displayMetrics.widthPixels * 0.15f).toInt(),
+                WindowManager.LayoutParams.MATCH_PARENT,
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY else WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+            lpRight.gravity = Gravity.END or Gravity.CENTER_VERTICAL
 
-        leftView = GestureView(this, true) { g -> onGesture(g) }
-        rightView = GestureView(this, false) { g -> onGesture(g) }
-        wm.addView(leftView, lpLeft)
-        wm.addView(rightView, lpRight)
+            leftView = GestureView(this, true) { g -> onGesture(g) }
+            rightView = GestureView(this, false) { g -> onGesture(g) }
+            wm.addView(leftView, lpLeft)
+            wm.addView(rightView, lpRight)
+        } catch (e: Exception) {
+            Log.e("OverlayService", "Error adding overlay", e)
+        }
     }
 
     private fun removeOverlay() {
