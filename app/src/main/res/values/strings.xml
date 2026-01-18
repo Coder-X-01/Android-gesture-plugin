@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Gesture Plugin</string>
+    <string name="accessibility_service_description">提供全局返回功能</string>
+    <string name="accessibility_service_summary">启用后可执行系统返回</string>
+
+    <string name="title_main">手势-功能映射配置</string>
+    <string name="start_service">启动悬浮服务</string>
+    <string name="stop_service">停止悬浮服务</string>
+    <string name="overlay_permission">授予悬浮窗权限</string>
+    <string name="accessibility_permission">启用辅助功能服务</string>
+    <string name="screenshot_permission">授予截屏权限</string>
+
+    <string name="gesture_left_up">左侧上滑</string>
+    <string name="gesture_left_horizontal">左侧水平滑动</string>
+    <string name="gesture_left_down">左侧下滑</string>
+    <string name="gesture_right_up">右侧上滑</string>
+    <string name="gesture_right_horizontal">右侧水平滑动</string>
+    <string name="gesture_right_down">右侧下滑</string>
+
+    <string name="func_back">系统返回</string>
+    <string name="func_screenshot">截屏</string>
+    <string name="func_launch_app">应用启动</string>
+    <string name="func_clean">系统清理</string>
+
+    <string-array name="function_options">
+        <item>@string/func_back</item>
+        <item>@string/func_screenshot</item>
+        <item>@string/func_launch_app</item>
+        <item>@string/func_clean</item>
+    </string-array>
+</resources>
