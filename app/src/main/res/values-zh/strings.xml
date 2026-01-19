@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Gesture Plugin</string>
+    <string name="accessibility_service_description">提供全局返回功能</string>
+    <string name="accessibility_service_summary">启用后可执行系统返回</string>
+
+    <string name="title_main">手势-功能映射配置</string>
+    <string name="start_service">启动悬浮服务</string>
+    <string name="stop_service">停止悬浮服务</string>
+    <string name="overlay_permission">授予悬浮窗权限</string>
+    <string name="accessibility_permission">启用辅助功能服务</string>
+    <string name="screenshot_permission">授予截屏权限</string>
+
+    <string name="gesture_left_up">左侧上滑</string>
+    <string name="gesture_left_horizontal">左侧水平滑动</string>
+    <string name="gesture_left_down">左侧下滑</string>
+    <string name="gesture_right_up">右侧上滑</string>
+    <string name="gesture_right_horizontal">右侧水平滑动</string>
+    <string name="gesture_right_down">右侧下滑</string>
+
+    <string name="func_back">系统返回</string>
+    <string name="func_screenshot">截屏</string>
+    <string name="func_launch_app">应用启动</string>
+    <string name="func_clean">系统清理</string>
+
+    <string-array name="function_options">
+        <item>@string/func_back</item>
+        <item>@string/func_screenshot</item>
+        <item>@string/func_launch_app</item>
+        <item>@string/func_clean</item>
+    </string-array>
+
+    <!-- New strings -->
+    <string name="btn_select_app">选择应用</string>
+    <string name="btn_unknown_app">未知应用</string>
+    <string name="switch_screenshot_confirm">启用截图确认弹窗 (MediaProjection)</string>
+    <string name="switch_animation">启用手势视觉动画</string>
+    <string name="dialog_accessibility_title">无法开启辅助功能？</string>
+    <string name="dialog_accessibility_message">如果在辅助功能列表中显示“受限设置”或无法勾选：\n\n1. 打开手机系统的【设置】->【应用】->【Gesture Plugin】\n2. 点击右上角三个点图标\n3. 选择【允许受限设置】\n4. 返回此处重新开启辅助功能</string>
+    <string name="btn_got_it">知道了</string>
+    <string name="btn_app_details">去应用详情页</string>
+    <string name="toast_screenshot_failed">截屏失败，请确保辅助功能已开启</string>
+    <string name="toast_screenshot_version_low">当前系统版本不支持无弹窗截屏 (需 Android 9.0+)，请在设置中开启“启用截图确认弹窗”</string>
+    <string name="toast_clean_finished">系统清理完成</string>
+    <string name="notification_running">手势插件正在运行</string>
+    <string name="title_select_app">选择应用</string>
+    <string name="label_language">语言</string>
+    <string name="title_gesture_area">手势区域设置</string>
+    <string name="label_width">宽度: %d px</string>
+    <string name="label_height">高度: %d px</string>
+    <string name="btn_reset">恢复默认</string>
+    
+    <string-array name="language_options">
+        <item>简体中文</item>
+        <item>English</item>
+    </string-array>
+</resources>

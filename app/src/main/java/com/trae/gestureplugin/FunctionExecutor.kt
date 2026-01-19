@@ -39,10 +39,10 @@ object FunctionExecutor {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 val result = GestureAccessibilityService.instance?.performGlobalAction(AccessibilityService.GLOBAL_ACTION_TAKE_SCREENSHOT)
                 if (result != true) {
-                    android.widget.Toast.makeText(ctx, "截屏失败，请确保辅助功能已开启", android.widget.Toast.LENGTH_SHORT).show()
+                    android.widget.Toast.makeText(ctx, ctx.getString(R.string.toast_screenshot_failed), android.widget.Toast.LENGTH_SHORT).show()
                 }
             } else {
-                android.widget.Toast.makeText(ctx, "当前系统版本不支持无弹窗截屏 (需 Android 9.0+)，请在设置中开启“启用截图确认弹窗”", android.widget.Toast.LENGTH_LONG).show()
+                android.widget.Toast.makeText(ctx, ctx.getString(R.string.toast_screenshot_version_low), android.widget.Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -61,7 +61,7 @@ object FunctionExecutor {
             .forEach { am.killBackgroundProcesses(it.packageName) }
         Runtime.getRuntime().gc()
         android.os.Handler(android.os.Looper.getMainLooper()).post {
-            Toast.makeText(ctx, "系统清理完成", Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, ctx.getString(R.string.toast_clean_finished), Toast.LENGTH_SHORT).show()
         }
     }
 

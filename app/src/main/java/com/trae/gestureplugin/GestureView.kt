@@ -16,7 +16,10 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import kotlin.math.abs
 
+import android.graphics.drawable.GradientDrawable
+
 class GestureView(context: Context, private val isLeft: Boolean, private val onGesture: (GestureType) -> Unit) : FrameLayout(context) {
+    // ... (detector implementation remains the same) ...
     private val detector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
         override fun onDown(e: MotionEvent): Boolean {
             return true
@@ -45,10 +48,11 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
     init {
         isClickable = true
         isFocusable = false
-        setBackgroundColor(Color.TRANSPARENT)
-
+        // 设置默认视觉：红色半透明背景 + 白色描边
+        setVisualsEnabled(true)
+        
         arrowView = ImageView(context)
-        arrowView.setImageResource(R.drawable.ic_arrow_right) // 默认为向右箭头
+        arrowView.setImageResource(R.drawable.ic_arrow_right)
         arrowView.visibility = View.GONE
         
         val size = (48 * resources.displayMetrics.density).toInt()
@@ -57,7 +61,19 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
         addView(arrowView, lp)
     }
 
+    fun setVisualsEnabled(enabled: Boolean) {
+        if (enabled) {
+            val bg = GradientDrawable()
+            bg.setColor(Color.parseColor("#CCFF0000")) // Red 80% Alpha
+            bg.setStroke((0.5f * resources.displayMetrics.density).toInt().coerceAtLeast(1), Color.WHITE)
+            background = bg
+        } else {
+            background = null
+        }
+    }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        // ... (touch implementation remains the same) ...
         Log.d("GestureView", "onTouchEvent: ${event.actionMasked}, x=${event.x}, y=${event.y}")
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
@@ -70,8 +86,6 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
                 val dy = event.y - startY
                 val dt = (System.currentTimeMillis() - startTime).coerceAtLeast(1)
                 
-                // 优化：如果是点击操作（位移很小且时间很短），不进行手势判断
-                // 阈值：位移 < 10px 且 时间 < 200ms
                 if (abs(dx) < 10 && abs(dy) < 10 && dt < 200) {
                     performClick()
                     return true
@@ -80,9 +94,8 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
                 val speedX = abs(dx) * 1000f / dt
                 val speedY = abs(dy) * 1000f / dt
                 
-                // 优化：提高触发速度阈值，防止误触
                 if (speedX < 200f && speedY < 200f) {
-                    // 太慢的拖动不作为手势
+                    // 太慢
                 } else {
                     classifyAndEmit(dx, dy)
                 }
@@ -90,6 +103,8 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
         }
         return detector.onTouchEvent(event)
     }
+    
+    // ... (rest of the class) ...
 
     private fun classifyAndEmit(dx: Float, dy: Float) {
         Log.d("GestureView", "classifyAndEmit: dx=$dx, dy=$dy")

@@ -1,31 +1,56 @@
 <resources>
     <string name="app_name">Gesture Plugin</string>
-    <string name="accessibility_service_description">提供全局返回功能</string>
-    <string name="accessibility_service_summary">启用后可执行系统返回</string>
+    <string name="accessibility_service_description">Provide global back gesture</string>
+    <string name="accessibility_service_summary">Enable to perform system back action</string>
 
-    <string name="title_main">手势-功能映射配置</string>
-    <string name="start_service">启动悬浮服务</string>
-    <string name="stop_service">停止悬浮服务</string>
-    <string name="overlay_permission">授予悬浮窗权限</string>
-    <string name="accessibility_permission">启用辅助功能服务</string>
-    <string name="screenshot_permission">授予截屏权限</string>
+    <string name="title_main">Gesture Mapping Config</string>
+    <string name="start_service">Start Overlay Service</string>
+    <string name="stop_service">Stop Overlay Service</string>
+    <string name="overlay_permission">Grant Overlay Permission</string>
+    <string name="accessibility_permission">Enable Accessibility</string>
+    <string name="screenshot_permission">Grant Screenshot Permission</string>
 
-    <string name="gesture_left_up">左侧上滑</string>
-    <string name="gesture_left_horizontal">左侧水平滑动</string>
-    <string name="gesture_left_down">左侧下滑</string>
-    <string name="gesture_right_up">右侧上滑</string>
-    <string name="gesture_right_horizontal">右侧水平滑动</string>
-    <string name="gesture_right_down">右侧下滑</string>
+    <string name="gesture_left_up">Left Up</string>
+    <string name="gesture_left_horizontal">Left Horizontal</string>
+    <string name="gesture_left_down">Left Down</string>
+    <string name="gesture_right_up">Right Up</string>
+    <string name="gesture_right_horizontal">Right Horizontal</string>
+    <string name="gesture_right_down">Right Down</string>
 
-    <string name="func_back">系统返回</string>
-    <string name="func_screenshot">截屏</string>
-    <string name="func_launch_app">应用启动</string>
-    <string name="func_clean">系统清理</string>
+    <string name="func_back">Back</string>
+    <string name="func_screenshot">Screenshot</string>
+    <string name="func_launch_app">Launch App</string>
+    <string name="func_clean">Clean System</string>
 
     <string-array name="function_options">
         <item>@string/func_back</item>
         <item>@string/func_screenshot</item>
         <item>@string/func_launch_app</item>
         <item>@string/func_clean</item>
+    </string-array>
+
+    <!-- New strings -->
+    <string name="btn_select_app">Select App</string>
+    <string name="btn_unknown_app">Unknown App</string>
+    <string name="switch_screenshot_confirm">Enable Screenshot Confirmation (MediaProjection)</string>
+    <string name="switch_animation">Enable Gesture Animation</string>
+    <string name="dialog_accessibility_title">Cannot enable Accessibility?</string>
+    <string name="dialog_accessibility_message">If \'Restricted Setting\' is shown or you cannot check it:\n\n1. Go to Settings -> Apps -> Gesture Plugin\n2. Tap the 3-dots icon on top right\n3. Select \'Allow restricted settings\'\n4. Return here to enable</string>
+    <string name="btn_got_it">Got it</string>
+    <string name="btn_app_details">App Details</string>
+    <string name="toast_screenshot_failed">Screenshot failed, ensure Accessibility is enabled</string>
+    <string name="toast_screenshot_version_low">No-popup screenshot requires Android 9.0+. Please enable confirmation in settings.</string>
+    <string name="toast_clean_finished">System clean finished</string>
+    <string name="notification_running">Gesture Plugin is running</string>
+    <string name="title_select_app">Select App</string>
+    <string name="label_language">Language</string>
+    <string name="title_gesture_area">Gesture Area Settings</string>
+    <string name="label_width">Width: %d px</string>
+    <string name="label_height">Height: %d px</string>
+    <string name="btn_reset">Reset Default</string>
+    
+    <string-array name="language_options">
+        <item>简体中文</item>
+        <item>English</item>
     </string-array>
 </resources>

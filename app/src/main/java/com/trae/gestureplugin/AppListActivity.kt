@@ -20,7 +20,7 @@ class AppListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_app_list)
         
-        supportActionBar?.title = "选择应用"
+        supportActionBar?.title = getString(R.string.title_select_app)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)

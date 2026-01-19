@@ -39,4 +39,13 @@ object Prefs {
     fun setShowAnimation(ctx: Context, show: Boolean) {
         sp(ctx).edit().putBoolean("show_animation", show).apply()
     }
+
+    fun getGestureWidth(ctx: Context): Int = sp(ctx).getInt("gesture_width", 200)
+    fun setGestureWidth(ctx: Context, width: Int) = sp(ctx).edit().putInt("gesture_width", width).apply()
+
+    fun getGestureHeight(ctx: Context): Int = sp(ctx).getInt("gesture_height", 150)
+    fun setGestureHeight(ctx: Context, height: Int) = sp(ctx).edit().putInt("gesture_height", height).apply()
+
+    fun getIsGestureVisible(ctx: Context): Boolean = sp(ctx).getBoolean("is_gesture_visible", true)
+    fun setIsGestureVisible(ctx: Context, visible: Boolean) = sp(ctx).edit().putBoolean("is_gesture_visible", visible).apply()
 }

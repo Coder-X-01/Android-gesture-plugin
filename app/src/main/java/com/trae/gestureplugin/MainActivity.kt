@@ -1,5 +1,6 @@
 package com.trae.gestureplugin
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -16,6 +17,10 @@ import android.content.pm.PackageManager
 
 class MainActivity : AppCompatActivity() {
     private val gestureButtons = mutableMapOf<GestureType, Button>()
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +44,93 @@ class MainActivity : AppCompatActivity() {
             Prefs.setUseMediaProjection(this, isChecked)
         }
 
+        // Gesture Area Settings
+        val sbWidth = findViewById<android.widget.SeekBar>(R.id.sb_width)
+        val sbHeight = findViewById<android.widget.SeekBar>(R.id.sb_height)
+        val tvWidth = findViewById<android.widget.TextView>(R.id.tv_width)
+        val tvHeight = findViewById<android.widget.TextView>(R.id.tv_height)
+        val btnResetArea = findViewById<android.widget.Button>(R.id.btn_reset_area)
+
+        val updateText = {
+            val w = sbWidth.progress * 10 + 100
+            val h = sbHeight.progress * 10 + 50
+            tvWidth.text = getString(R.string.label_width, w)
+            tvHeight.text = getString(R.string.label_height, h)
+        }
+
+        // Init values
+        val currentW = Prefs.getGestureWidth(this)
+        val currentH = Prefs.getGestureHeight(this)
+        sbWidth.max = 25
+        sbHeight.max = 175
+        
+        sbWidth.progress = ((currentW - 100) / 10).coerceIn(0, 25)
+        sbHeight.progress = ((currentH - 50) / 10).coerceIn(0, 175)
+        updateText()
+
+        val saveAndNotify = {
+            val w = sbWidth.progress * 10 + 100
+            val h = sbHeight.progress * 10 + 50
+            Prefs.setGestureWidth(this, w)
+            Prefs.setGestureHeight(this, h)
+            sendBroadcast(Intent("com.trae.gestureplugin.ACTION_CONFIG_CHANGED"))
+        }
+
+        val sliderListener = object : android.widget.SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
+                updateText()
+            }
+            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                saveAndNotify()
+            }
+        }
+
+        sbWidth.setOnSeekBarChangeListener(sliderListener)
+        sbHeight.setOnSeekBarChangeListener(sliderListener)
+
+        btnResetArea.setOnClickListener {
+            // Default: 200x150
+            sbWidth.progress = 10 // (200-100)/10
+            sbHeight.progress = 10 // (150-50)/10
+            updateText()
+            saveAndNotify()
+        }
+
         // Bind animation setting
         val switchAnimation = findViewById<android.widget.Switch>(R.id.switch_animation)
         switchAnimation.isChecked = Prefs.getShowAnimation(this)
         switchAnimation.setOnCheckedChangeListener { _, isChecked ->
             Prefs.setShowAnimation(this, isChecked)
         }
+
+        // Bind gesture visibility setting
+        val switchVisible = findViewById<android.widget.Switch>(R.id.switch_gesture_visible)
+        switchVisible.isChecked = Prefs.getIsGestureVisible(this)
+        switchVisible.setOnCheckedChangeListener { _, isChecked ->
+            Prefs.setIsGestureVisible(this, isChecked)
+            sendBroadcast(Intent("com.trae.gestureplugin.ACTION_CONFIG_CHANGED"))
+        }
+
+        // Bind language setting
+        val spLanguage = findViewById<Spinner>(R.id.sp_language)
+        val langAdapter = ArrayAdapter.createFromResource(this, R.array.language_options, android.R.layout.simple_spinner_item)
+        langAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spLanguage.adapter = langAdapter
+        
+        val currentLang = LocaleHelper.getLanguage(this)
+        spLanguage.setSelection(if (currentLang == "en") 1 else 0)
+        
+        spLanguage.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: android.view.View?, position: Int, id: Long) {
+                val newLang = if (position == 0) "zh" else "en"
+                if (newLang != LocaleHelper.getLanguage(this@MainActivity)) {
+                    LocaleHelper.setLocale(this@MainActivity, newLang)
+                    recreate()
+                }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        })
 
         // Permissions and Service Control
         findViewById<Button>(R.id.btn_overlay_perm).setOnClickListener {
@@ -67,10 +153,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun showRestrictedSettingsGuide() {
         android.app.AlertDialog.Builder(this)
-            .setTitle("无法开启辅助功能？")
-            .setMessage("如果在辅助功能列表中显示“受限设置”或无法勾选：\n\n1. 打开手机系统的【设置】->【应用】->【Gesture Plugin】\n2. 点击右上角三个点图标\n3. 选择【允许受限设置】\n4. 返回此处重新开启辅助功能")
-            .setPositiveButton("知道了", null)
-            .setNeutralButton("去应用详情页") { _, _ ->
+            .setTitle(R.string.dialog_accessibility_title)
+            .setMessage(R.string.dialog_accessibility_message)
+            .setPositiveButton(R.string.btn_got_it, null)
+            .setNeutralButton(R.string.btn_app_details) { _, _ ->
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
                 intent.data = Uri.fromParts("package", packageName, null)
                 startActivity(intent)
@@ -120,7 +206,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateAppInfo(button: Button, packageName: String?) {
         if (packageName == null) {
-            button.text = "选择应用"
+            button.text = getString(R.string.btn_select_app)
             button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
             return
         }
@@ -139,7 +225,7 @@ class MainActivity : AppCompatActivity() {
             button.setCompoundDrawables(icon, null, null, null)
             button.compoundDrawablePadding = (8 * density).toInt()
         } catch (e: Exception) {
-            button.text = "未知应用"
+            button.text = getString(R.string.btn_unknown_app)
             button.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
         }
     }
