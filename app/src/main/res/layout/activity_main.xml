@@ -245,6 +245,26 @@
         </LinearLayout>
 
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            
+            <Button
+                android:id="@+id/btn_select_blocked_apps"
+                android:text="Select Apps to Shield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+                
+            <Switch
+                android:id="@+id/switch_game_mode"
+                android:text="Game Mode (Auto Shield)"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

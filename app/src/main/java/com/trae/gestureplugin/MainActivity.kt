@@ -149,6 +149,20 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_stop_service).setOnClickListener {
             stopService(Intent(this, OverlayService::class.java))
         }
+
+        // Shielding Settings
+        findViewById<android.widget.Button>(R.id.btn_select_blocked_apps).setOnClickListener {
+            val intent = Intent(this, AppListActivity::class.java)
+            intent.putExtra("multi_select", true)
+            startActivity(intent)
+        }
+        
+        val switchGameMode = findViewById<android.widget.Switch>(R.id.switch_game_mode)
+        switchGameMode.isChecked = Prefs.getGameModeEnabled(this)
+        switchGameMode.setOnCheckedChangeListener { _, isChecked ->
+            Prefs.setGameModeEnabled(this, isChecked)
+            sendBroadcast(Intent("com.trae.gestureplugin.ACTION_CONFIG_CHANGED"))
+        }
     }
 
     private fun showRestrictedSettingsGuide() {

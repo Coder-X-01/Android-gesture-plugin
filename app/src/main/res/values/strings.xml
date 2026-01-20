@@ -41,6 +41,8 @@
     <string name="toast_screenshot_failed">Screenshot failed, ensure Accessibility is enabled</string>
     <string name="toast_screenshot_version_low">No-popup screenshot requires Android 9.0+. Please enable confirmation in settings.</string>
     <string name="toast_clean_finished">System clean finished</string>
+    <string name="toast_service_started">Service started successfully</string>
+    <string name="toast_service_stopped">Service has stopped</string>
     <string name="notification_running">Gesture Plugin is running</string>
     <string name="title_select_app">Select App</string>
     <string name="label_language">Language</string>

@@ -48,4 +48,10 @@ object Prefs {
 
     fun getIsGestureVisible(ctx: Context): Boolean = sp(ctx).getBoolean("is_gesture_visible", true)
     fun setIsGestureVisible(ctx: Context, visible: Boolean) = sp(ctx).edit().putBoolean("is_gesture_visible", visible).apply()
+
+    fun getBlockedApps(ctx: Context): Set<String> = sp(ctx).getStringSet("blocked_apps", emptySet()) ?: emptySet()
+    fun setBlockedApps(ctx: Context, apps: Set<String>) = sp(ctx).edit().putStringSet("blocked_apps", apps).apply()
+
+    fun getGameModeEnabled(ctx: Context): Boolean = sp(ctx).getBoolean("game_mode_enabled", false)
+    fun setGameModeEnabled(ctx: Context, enabled: Boolean) = sp(ctx).edit().putBoolean("game_mode_enabled", enabled).apply()
 }

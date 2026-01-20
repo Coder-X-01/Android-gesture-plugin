@@ -41,6 +41,8 @@
     <string name="toast_screenshot_failed">截屏失败，请确保辅助功能已开启</string>
     <string name="toast_screenshot_version_low">当前系统版本不支持无弹窗截屏 (需 Android 9.0+)，请在设置中开启“启用截图确认弹窗”</string>
     <string name="toast_clean_finished">系统清理完成</string>
+    <string name="toast_service_started">服务已成功启动</string>
+    <string name="toast_service_stopped">服务已停止运行</string>
     <string name="notification_running">手势插件正在运行</string>
     <string name="title_select_app">选择应用</string>
     <string name="label_language">语言</string>

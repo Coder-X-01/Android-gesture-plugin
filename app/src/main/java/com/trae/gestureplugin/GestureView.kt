@@ -68,7 +68,7 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
             bg.setStroke((0.5f * resources.displayMetrics.density).toInt().coerceAtLeast(1), Color.WHITE)
             background = bg
         } else {
-            background = null
+            background = android.graphics.drawable.ColorDrawable(Color.TRANSPARENT)
         }
     }
 
