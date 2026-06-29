@@ -1,0 +1,16 @@
+优先问题
+Manifest 权限合规要先处理：BIND_ACCESSIBILITY_SERVICE 顶层声明、QUERY_ALL_PACKAGES、KILL_BACKGROUND_PROCESSES、FOREGROUND_SERVICE_SPECIAL_USE 都需要重新审视。
+【已处理】
+
+
+手势识别可能重复触发：GestureView 里 ACTION_UP 手动分类一次，同时 GestureDetector.onFling 也可能再分类一次，快滑时可能执行两次动作。【已处理】
+
+截图逻辑不稳：MediaProjection 直接写公共 Pictures/Screenshots，在 target 34/scoped storage 下容易失败，应该走 MediaStore；无障碍截图目前也只是系统全局动作，不等同于应用自己保存截图。
+
+广播注册应收紧：OverlayService Android 13+ 用了 RECEIVER_EXPORTED，但这是应用内部广播，更适合 NOT_EXPORTED/ContextCompat.registerReceiver。
+
+GestureAccessibilityService 用静态字段持有 service 实例，lint 报内存泄漏风险；短期可跑，长期要换成更稳的服务状态/动作桥。
+
+UI 和代码有些残留：AppListAdapter.kt/AppInfo.kt 像旧实现；布局里有硬编码文案；Switch 建议换 AppCompat/Material 版本。
+
+“系统清理”功能实际价值和合规风险都偏高，现代 Android 对清后台限制很多，这个功能可能体验不稳定，也容易被商店审核盯上。

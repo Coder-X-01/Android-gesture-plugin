@@ -42,6 +42,7 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
     private var startX = 0f
     private var startY = 0f
     private var startTime = 0L
+    private var gestureEmitted = false
 
     private val arrowView: ImageView
 
@@ -49,7 +50,7 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
         isClickable = true
         isFocusable = false
         // 设置默认视觉：红色半透明背景 + 白色描边
-        setVisualsEnabled(true)
+        setVisualsEnabled(false)
         
         arrowView = ImageView(context)
         arrowView.setImageResource(R.drawable.ic_arrow_right)
@@ -80,6 +81,7 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
                 startX = event.x
                 startY = event.y
                 startTime = System.currentTimeMillis()
+                gestureEmitted = false
             }
             MotionEvent.ACTION_UP -> {
                 val dx = event.x - startX
@@ -107,6 +109,12 @@ class GestureView(context: Context, private val isLeft: Boolean, private val onG
     // ... (rest of the class) ...
 
     private fun classifyAndEmit(dx: Float, dy: Float) {
+        if (gestureEmitted) {
+            Log.d("GestureView", "Ignoring duplicate gesture emission")
+            return
+        }
+        gestureEmitted = true
+
         Log.d("GestureView", "classifyAndEmit: dx=$dx, dy=$dy")
         val gesture = if (abs(dx) > abs(dy)) {
             if (isLeft) GestureType.LEFT_HORIZONTAL else GestureType.RIGHT_HORIZONTAL

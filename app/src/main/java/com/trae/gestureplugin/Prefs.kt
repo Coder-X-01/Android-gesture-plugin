@@ -46,7 +46,7 @@ object Prefs {
     fun getGestureHeight(ctx: Context): Int = sp(ctx).getInt("gesture_height", 150)
     fun setGestureHeight(ctx: Context, height: Int) = sp(ctx).edit().putInt("gesture_height", height).apply()
 
-    fun getIsGestureVisible(ctx: Context): Boolean = sp(ctx).getBoolean("is_gesture_visible", true)
+    fun getIsGestureVisible(ctx: Context): Boolean = sp(ctx).getBoolean("is_gesture_visible", false)
     fun setIsGestureVisible(ctx: Context, visible: Boolean) = sp(ctx).edit().putBoolean("is_gesture_visible", visible).apply()
 
     fun getBlockedApps(ctx: Context): Set<String> = sp(ctx).getStringSet("blocked_apps", emptySet()) ?: emptySet()

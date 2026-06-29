@@ -20,7 +20,7 @@
     <string name="func_back">系统返回</string>
     <string name="func_screenshot">截屏</string>
     <string name="func_launch_app">应用启动</string>
-    <string name="func_clean">系统清理</string>
+    <string name="func_clean">内存清理</string>
 
     <string-array name="function_options">
         <item>@string/func_back</item>
@@ -40,7 +40,7 @@
     <string name="btn_app_details">去应用详情页</string>
     <string name="toast_screenshot_failed">截屏失败，请确保辅助功能已开启</string>
     <string name="toast_screenshot_version_low">当前系统版本不支持无弹窗截屏 (需 Android 9.0+)，请在设置中开启“启用截图确认弹窗”</string>
-    <string name="toast_clean_finished">系统清理完成</string>
+    <string name="toast_clean_finished">内存清理完成</string>
     <string name="toast_service_started">服务已成功启动</string>
     <string name="toast_service_stopped">服务已停止运行</string>
     <string name="notification_running">手势插件正在运行</string>

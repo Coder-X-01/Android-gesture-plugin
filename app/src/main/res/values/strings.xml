@@ -20,7 +20,7 @@
     <string name="func_back">Back</string>
     <string name="func_screenshot">Screenshot</string>
     <string name="func_launch_app">Launch App</string>
-    <string name="func_clean">Clean System</string>
+    <string name="func_clean">Clean Memory</string>
 
     <string-array name="function_options">
         <item>@string/func_back</item>
@@ -40,7 +40,7 @@
     <string name="btn_app_details">App Details</string>
     <string name="toast_screenshot_failed">Screenshot failed, ensure Accessibility is enabled</string>
     <string name="toast_screenshot_version_low">No-popup screenshot requires Android 9.0+. Please enable confirmation in settings.</string>
-    <string name="toast_clean_finished">System clean finished</string>
+    <string name="toast_clean_finished">Memory cleanup finished</string>
     <string name="toast_service_started">Service started successfully</string>
     <string name="toast_service_stopped">Service has stopped</string>
     <string name="notification_running">Gesture Plugin is running</string>

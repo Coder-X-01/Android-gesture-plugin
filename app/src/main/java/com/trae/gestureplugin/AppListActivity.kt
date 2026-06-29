@@ -1,8 +1,6 @@
 package com.trae.gestureplugin
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -50,17 +48,17 @@ class AppListActivity : AppCompatActivity() {
             
             val apps = withContext(Dispatchers.IO) {
                 val pm = packageManager
-                val packages = pm.getInstalledPackages(0)
-                packages.mapNotNull { info ->
-                    val pkgName = info.packageName
-                    if (pm.getLaunchIntentForPackage(pkgName) != null) {
-                        val appName = info.applicationInfo.loadLabel(pm).toString()
-                        val icon = info.applicationInfo.loadIcon(pm)
+                val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+                pm.queryIntentActivities(launcherIntent, 0)
+                    .mapNotNull { info ->
+                        val appInfo = info.activityInfo?.applicationInfo ?: return@mapNotNull null
+                        val pkgName = appInfo.packageName
+                        val appName = appInfo.loadLabel(pm).toString()
+                        val icon = appInfo.loadIcon(pm)
                         AppItem(appName, pkgName, icon, blockedApps.contains(pkgName))
-                    } else {
-                        null
                     }
-                }.sortedBy { it.name.lowercase() }
+                    .distinctBy { it.packageName }
+                    .sortedBy { it.name.lowercase() }
             }
 
             progressBar.visibility = View.GONE

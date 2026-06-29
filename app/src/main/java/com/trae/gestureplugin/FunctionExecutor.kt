@@ -1,10 +1,8 @@
 package com.trae.gestureplugin
 
 import android.accessibilityservice.AccessibilityService
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -55,10 +53,6 @@ object FunctionExecutor {
     }
 
     private fun clean(ctx: Context) {
-        val am = ctx.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val apps = ctx.packageManager.getInstalledApplications(0)
-        apps.filter { it.packageName != ctx.packageName && (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
-            .forEach { am.killBackgroundProcesses(it.packageName) }
         Runtime.getRuntime().gc()
         android.os.Handler(android.os.Looper.getMainLooper()).post {
             Toast.makeText(ctx, ctx.getString(R.string.toast_clean_finished), Toast.LENGTH_SHORT).show()

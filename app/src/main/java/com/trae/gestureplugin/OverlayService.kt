@@ -31,6 +31,7 @@ class OverlayService : Service() {
     private var homePackage: String? = null
     private var isGestureHiddenByUser = false
     private var isCurrentStateBlocked = false
+    private var currentForegroundPackage: String? = null
     
     private val windowStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -42,14 +43,15 @@ class OverlayService : Service() {
                 }
 
                 val pkg = intent?.getStringExtra("package_name")
+                currentForegroundPackage = pkg
                 Log.d("OverlayService", "Window state changed: $pkg")
                 
                 // Check logic
                 if (pkg == packageName) {
-                    // In App: Disable everything completely
-                    Log.d("OverlayService", "Entering self, disabling gestures")
-                    isCurrentStateBlocked = true
-                    setOverlayVisibility(false)
+                    Log.d("OverlayService", "Entering self, showing gesture areas for adjustment")
+                    isCurrentStateBlocked = false
+                    setOverlayVisibility(true)
+                    applyGestureVisualState(pkg)
                 } else {
                     // Check Blocked Apps / Games
                     val blockedApps = Prefs.getBlockedApps(this@OverlayService)
@@ -73,25 +75,7 @@ class OverlayService : Service() {
                         setOverlayVisibility(false)
                     } else {
                         setOverlayVisibility(true) // Ensure visible for touch
-                        
-                        if (pkg == homePackage) {
-                             // Desktop: Hide Visuals (SystemUI removed from here to fix flickering)
-                             setGestureVisuals(false)
-                             // Use 0.01f instead of 0f to ensure touch events are still received
-                             leftView?.animate()?.alpha(0.01f)?.setDuration(300)?.start()
-                             rightView?.animate()?.alpha(0.01f)?.setDuration(300)?.start()
-                        } else {
-                            // Normal App
-                            if (isGestureHiddenByUser) {
-                                 setGestureVisuals(false)
-                                 leftView?.animate()?.alpha(0.01f)?.setDuration(300)?.start()
-                                 rightView?.animate()?.alpha(0.01f)?.setDuration(300)?.start()
-                            } else {
-                                 setGestureVisuals(true)
-                                 leftView?.animate()?.alpha(1f)?.setDuration(300)?.start()
-                                 rightView?.animate()?.alpha(1f)?.setDuration(300)?.start()
-                            }
-                        }
+                        applyGestureVisualState(pkg)
                     }
                 }
             } catch (e: Exception) {
@@ -103,6 +87,14 @@ class OverlayService : Service() {
     private fun setGestureVisuals(visible: Boolean) {
         leftView?.setVisualsEnabled(visible)
         rightView?.setVisualsEnabled(visible)
+    }
+
+    private fun applyGestureVisualState(pkg: String?) {
+        val visible = pkg == packageName || Prefs.getIsGestureVisible(this)
+        setGestureVisuals(visible)
+        val targetAlpha = if (visible) 1f else 0.01f
+        leftView?.animate()?.alpha(targetAlpha)?.setDuration(300)?.start()
+        rightView?.animate()?.alpha(targetAlpha)?.setDuration(300)?.start()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -136,10 +128,11 @@ class OverlayService : Service() {
             
             // Check initial state
             val currentPkg = GestureAccessibilityService.currentPackage
+            currentForegroundPackage = currentPkg
             
             if (currentPkg != null) {
                 if (currentPkg == packageName) {
-                    isCurrentStateBlocked = true
+                    isCurrentStateBlocked = false
                 } else {
                     val blockedApps = Prefs.getBlockedApps(this)
                     val isGameMode = Prefs.getGameModeEnabled(this)
@@ -152,11 +145,8 @@ class OverlayService : Service() {
             if (isCurrentStateBlocked) {
                 setOverlayVisibility(false)
             } else {
-                if (isGestureHiddenByUser) {
-                    setOverlayVisibility(false)
-                } else if (currentPkg == homePackage || currentPkg == "com.android.systemui") {
-                    setGestureVisuals(false)
-                }
+                setOverlayVisibility(true)
+                applyGestureVisualState(currentPkg)
             }
         
         // Force a layout update to ensure views are added
@@ -267,6 +257,7 @@ class OverlayService : Service() {
             val targetAlpha = if (isVisible) 1f else 0f
             leftView?.animate()?.alpha(targetAlpha)?.setDuration(300)?.start()
             rightView?.animate()?.alpha(targetAlpha)?.setDuration(300)?.start()
+            applyGestureVisualState(currentForegroundPackage)
             
         } catch (e: Exception) {
             Log.e("OverlayService", "Error updating overlay", e)
@@ -281,6 +272,10 @@ class OverlayService : Service() {
     }
 
     private fun onGesture(gesture: GestureType) {
+        if (currentForegroundPackage == packageName) {
+            Log.d("OverlayService", "Ignoring gesture while adjusting in app")
+            return
+        }
         Log.d("OverlayService", "onGesture received: $gesture")
         val func = Prefs.getFunction(this, gesture)
         val pkg = Prefs.getAppPackage(this, gesture)
